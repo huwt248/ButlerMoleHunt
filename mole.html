@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>The Big Butler Mole Hunt</title>
+      <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+          text-align: center;
+        
+      }
+      #floating-panel {
+        position: absolute;
+        display:none;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+      #floating-panel {
+        margin-left: -100px;
+      }
+      #eggsRemain{
+          left: 125px;
+      }
+        #yourEggCount{
+          left: 350px;
+      }
+        .eggCounter{
+          position: absolute;
+          display: block;
+          top: 20px;
+          width: 175px;
+          height: 50px;
+          font-size: 18px;
+          background-color: #DA4626;
+          z-index: 20;
+          font-family: 'Roboto','sans-serif';
+          color: white;
+          border-radius: 5px;
+          padding-top: 4px;
+          font-weight: 400;
+        }
+        #eggFound {
+            background-image: url('EasterBackground.png');
+        }
+        #specialEggFound {
+            background-image: url('specialEgg.png');
+        }
+        .eggPopup{
+            display: none;
+            position: absolute;           
+            top: 15%;    
+            z-index: 10;
+            border-radius: 2%;
+            width: 600px;
+            height: 700px;
+            left: calc((100% - 700px)/2);
+            background-color: #fff8b4;
+            padding: 5px;
+            text-align: center;
+            font-family: 'Roboto','sans-serif';
+            font-size: 30px;
+            line-height: 60px;
+        }
+        #closeButton {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            font-size: 30px;
+            text-align: center;
+            left: 650px;
+            top: 10px;
+            background-color: aliceblue;
+            line-height: 45px;
+        }
+        input{
+            width: 300px;
+            height: 20px;
+            padding: 7px;
+            font-size: 16px;
+            text-align: center;
+            border: none;
+            border-bottom: 2px solid red;
+            border-radius: 10px;
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+        #mySubmit{
+            width: 150px;
+            height: 60px;
+            border: none;
+            color: white;
+            border-radius: 10px;
+            background-color: #DA4626;
+            cursor: pointer;
+        }
+        #eggTitle{
+            display: block;
+            line-height: 20px;
+            margin-top: 40px;
+        }
+        #foundMessage{
+            font-size: 20px;
+            line-height: 18px;
+        }
+        #intro{
+            z-index: 15;
+            font-size: 8px;
+            padding-top: 100px;
+        }
+        #instructions{  
+            z-index: 10;
+            font-size: 14px;
+            padding-top: 70px;
+            background-image: url('Instructions.png');
+            background-origin: border-box;
+            background-repeat: no-repeat;
+            background-size: 600px 640px;
+        }
+        #close{
+            display: block;
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 10px;
+            background-color: #DA4626;
+            color: white;
+            cursor: pointer;
+            padding: 7px;
+            font-size: 16px;
+            text-align: center;
+            line-height: 30px;
+            margin-top: -40px;
+            margin-left: 480px;
+        }
+        .startPopup{
+            display:block;
+            position: absolute;           
+            top: 15%;
+            line-height: 30px;
+            padding: 30px;
+            border-radius: 2%;
+            width: 540px;
+            height: 540px;
+            left: calc((100% - 700px)/2);
+            background-color: #fff8b4;
+            background-image: url('MoleWelcomeScreen.png');
+            background-origin: border-box;
+            background-repeat: no-repeat;
+            background-size: 600px 700px;
+            text-align: center;
+            font-family: 'Roboto','sans-serif';
+        }
+        
+        #personalForm{
+            margin-top:  250px;
+            left: 5%;
+            width: 60%;
+        }
+        #introTitle{
+            font-size: 30px;
+            padding: 10px;
+            
+        }
+        #emailloggingsubmit{
+            width: 150px;
+            height: 70px;
+            border: none;
+            border-radius: 10px;
+            background-color: #DA4626;
+            color: white;
+            cursor: pointer;
+        }
+        #introMessage{
+            font-size: 18px;
+        }
+        #emaillogging{
+            font-size: 18px;
+        
+        }
+        .specialMessage{
+            z-index: 1500;
+             display:none;
+             position: absolute;           
+             top: 15%;
+             border-radius: 2%;
+            width: 900px;
+            height: 700px;
+            left: calc((100% - 900px)/2);
+            color: white;
+            background-color: #fff8b4;
+            background-size: 900px 700px;
+            background-origin: border-box;
+            background-repeat: no-repeat;
+            font-family: 'Roboto','sans-serif';
+            font-size: 20px;
+            line-height: 30px;
+        }
+        .specialMessage2{
+            z-index: 1500;
+             display:none;
+             position: absolute;           
+             top: 15%;
+             border-radius: 2%;
+            width: 900px;
+            height: 700px;
+            left: calc((100% - 900px)/2);
+            color: white;
+            background-size: 900px 700px;
+            background-origin: border-box;
+            background-repeat: no-repeat;
+            font-family: 'Roboto','sans-serif';
+            font-size: 20px;
+            line-height: 30px;
+        }
+        #allEggsFound{   
+        
+          display: block;
+        }
+
+        #countdown{ 
+            background-image: url('Mole Game Main Img.png');
+        }
+        #countdown > div{
+            padding: 12px;
+            border-radius: 3px;
+            background: #DA4626;
+            display: inline-block;
+            width: 80px;
+            margin-top: 420px;
+            margin-left: 10px;
+        }
+
+        #countdown div > span{
+            width: 23px;
+            padding: 15px;
+            border-radius: 3px;
+            background: #E6C61B;
+            display: inline-block;
+        }
+        .title{
+            font-size: 50px;
+            padding: 10px;
+        }
+        #miniMap{
+            position: absolute;
+            display: block;
+            z-index: 100;
+            right: 100px;
+            width: 250px;
+            top: 3%;
+            height: 250px;
+            background-color: aqua;
+        }
+        #myForm{
+            line-height: 50px;
+        }
+        
+    </style>
+      
+  </head>
+    
+  <body>
+    <div id="floating-panel">
+      <input type="button" value="Toggle Street View" onclick="toggleStreetView();"></input>
+    </div> 
+    <div id="eggsRemain" class="eggCounter"><b>Moles Remaining:</b><br> <span id="eggCount"></span> </div>
+    <div id="yourEggCount" class = "eggCounter"><b>Your Moles:</b><br> <span id="yourEggs"></span> </div>
+    <!-- Window pops up when clicking on egg !-->
+    <div id="eggFound" class="eggPopup">
+        <span id="eggTitle">Congratulations! </span><span id="foundMessage">Please enter your information to record this Mole</span>
+        <form id="myForm" action="https://script.google.com/macros/s/AKfycbzgxsoRzV_i60beS0NRTXQ8-TO_DTYLW82cs3qv45rpL3YJvWFo/exec">
+        Mole ID:<br>
+        <input type="text" name="eggid" id="eggidcode"><br>
+        Your Name:<br>
+        <input type="text" id ="formNameInput" name="name"><br>
+        Username:<br>
+        <input type="text" id ="formEmailInput" name="email"><br>
+            <br>
+        <input type="submit" id="mySubmit" value="Submit">
+        </form>
+    </div> 
+    
+    <div id="allEggsFound" class = "specialMessage2"></div>
+    
+    <div id = "countdown" class = "specialMessage">
+  <div>
+    <span id="days"></span>
+    <div class="smalltext">Days</div>
+  </div>
+  <div>
+    <span id="hours"></span>
+    <div class="smalltext">Hours</div>
+  </div>
+  <div>
+    <span id="minutes"></span>
+    <div class="smalltext">Minutes</div>
+  </div>
+  <div>
+    <span id="seconds"></span>
+    <div class="smalltext">Seconds</div>
+  </div>
+    </div>
+
+    <div id="instructions" class="startPopup">
+    <div id="close" onclick="closeWindow()">X</div>
+    </div>
+    
+    <div id="intro" class="startPopup">
+        <div id="personalForm">
+            <form id="emaillogging">
+            Name:<br>
+            <input type="text"  name="namesubmit"><br>
+            <br>
+            Username (abcd12):<br>
+            <input type="text"  name="emailsubmit"><br>
+            <br>
+            <input type="submit" id="emailloggingsubmit" value="Submit">
+            </form>
+            <p><span id="emailconf"></span></p>
+        </div>
+    </div> 
+    
+    <div id="map"></div>
+    
+    <div id="miniMap"></div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+      var panorama;
+      var yourname;
+      var youremail;
+      var emailentered = 0;
+      var clickedMarker;
+      var eggList = [];
+      var userList = [];
+      var hashList = [];
+      var specialEggs = [4, 18, 96, 121, 122];
+      var markers = [];
+      var locations;
+      var entry;
+        var miniMap = undefined;
+         var arrow = {
+            url: 'arrow.png', 
+            //scaledSize: new google.maps.Size(50, 50), // scaled size
+        };
+      var miniMapIcon
+        
+  function initMap() {
+
+        var crossroads = {lat:54.768742, lng:-1.574184};
+        // Set up the map
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: crossroads,
+          zoom: 18,
+          disableDefaultUI: true
+        });
+        
+        miniMap = new google.maps.Map(document.getElementById('miniMap'), {
+            center: crossroads,
+            zoom: 15,
+            disableDefaultUI: true
+        });
+      
+
+        var icon = {
+            url: 'moleFake.png', // egg image
+            scaledSize: new google.maps.Size(60, 60), // scaled size
+        };
+
+      
+       miniMapIcon = {
+           path: 'm 0 -35 l 35 70 l -35 -20 l -35 20 l 35 -70',
+           scale: 0.5,
+           fillColor: "#68246D",
+           fillOpacity: 0.8,
+           strokeWeight: 3,
+           strokeColor: "#68246D",
+           rotation: 0
+       }
+        miniMapMarker = new google.maps.Marker({
+            position: new google.maps.LatLng(54.768742, -1.574184),
+            map: miniMap,
+            icon: miniMapIcon,
+        });
+      
+      /* Out of bounds map polygon */
+      const leftCoords = [
+          { lat: 54.757948, lng: -1.580013 },
+          { lat: 54.759343, lng: -1.583062 },
+          { lat: 54.762894, lng: -1.580122 },
+          { lat: 54.763021, lng: -1.581469 },
+          { lat: 54.763402, lng: -1.587404 },
+          { lat: 54.765240, lng: -1.587459 },
+          { lat: 54.768902, lng: -1.580232 },
+          { lat: 54.775226, lng: -1.586332 },
+          { lat: 54.778151, lng: -1.585774 },
+          { lat: 54.779203, lng: -1.584931 },
+          { lat: 54.779964, lng: -1.575014 },
+          { lat: 54.784373, lng: -1.574640 },
+          { lat: 54.784754, lng: -1.597030 },
+          { lat: 54.753309, lng: -1.598334 },
+          { lat: 54.752536, lng: -1.578387 },
+          { lat: 54.757948, lng: -1.580013 }];
+      
+      const rightCoords = [
+          { lat: 54.757948, lng: -1.580013 },
+          { lat: 54.760768, lng: -1.574204 },
+          { lat: 54.762610, lng: -1.574068 },
+          { lat: 54.763933, lng: -1.567901 },
+          { lat: 54.768015, lng: -1.568643 },
+          { lat: 54.778077, lng: -1.558747 },
+          { lat: 54.779141, lng: -1.564254 },
+          { lat: 54.779964, lng: -1.575014 },
+          { lat: 54.784373, lng: -1.574640 },
+          { lat: 54.781036, lng: -1.544489 },
+          { lat: 54.751819, lng: -1.574084 },
+          { lat: 54.752536, lng: -1.578387 }];
+      
+      const rightOB = new google.maps.Polygon({
+          paths: rightCoords,
+          strokeColor: "#DA4626",
+          strokeOpacity: 0.6,
+          fillColor: "#DA4626",
+          fillOpacity: 0.6
+      })
+      rightOB.setMap(miniMap)
+      const leftOB = new google.maps.Polygon({
+          paths: leftCoords,
+          strokeColor: "#DA4626",
+          strokeOpacity: 0.6,
+          fillColor: "#DA4626",
+          fillOpacity: 0.6
+      })
+      leftOB.setMap(miniMap)
+      
+      
+            /* ---------------------------------------------------------------------------
+            ------------------------------------------------------------------------------
+                        Egg Location Code 
+            -----------------------------------------------------------------------------*/
+
+
+    locations = [
+        ['UU72', 54.77783,-1.566130],
+       ['NN53', 54.7663,-1.5805],
+       ['YH55', 54.767028,-1.571142],
+       ['NH62', 54.7691,-1.5683],
+       ['GP84', 54.7784,-1.5828],
+       ['NZ82', 54.7635,-1.577],
+       ['JD17', 54.7672,-1.581],
+       ['YD23', 54.7734,-1.575],
+       ['CQ82', 54.7712,-1.5813],
+       ['HE53', 54.764466,-1.570462],
+       ['FX23', 54.7599,-1.5801],
+       ['XF71', 54.7764,-1.571],
+       ['PB12', 54.7681,-1.5803],
+       ['ZV96', 54.7769,-1.5726],
+       ['ZC13', 54.7776,-1.5631],
+       ['SW89', 54.7738,-1.5758],
+       ['HC81', 54.773161,-1.571366],
+       ['UF95', 54.7643,-1.5792],
+       ['FT81', 54.7671,-1.5736],
+       ['QF91', 54.7716,-1.5698],
+       ['VS13', 54.760531,-1.579684],
+       ['FG67', 54.7742,-1.5677],
+       ['JV82', 54.7666,-1.5794],
+       ['BR25', 54.7736,-1.5666],
+       ['KM28', 54.7774,-1.5629],
+       ['OI57', 54.763243,-1.581010],
+       ['HZ88', 54.778,-1.5781],
+       ['YF71', 54.7734,-1.5806],
+       ['QB59', 54.7738,-1.5764],
+       ['VP52', 54.7765,-1.5854],
+       ['BZ14', 54.7766,-1.5746],
+       ['OQ29', 54.763,-1.5788],
+       ['FT73', 54.7738,-1.5702],
+       ['PN47', 54.7727,-1.5765],
+       ['CP52', 54.7649,-1.5755],
+       ['CR12', 54.7641,-1.5768],
+       ['RL98', 54.7785,-1.571],
+       ['JR79', 54.7644,-1.5752],
+       ['KD38', 54.775364,-1.585586],
+       ['KK34', 54.7711,-1.5659],
+       ['HR61', 54.7784,-1.5724],
+       ['XA41', 54.7677,-1.574],
+       ['MM75', 54.7637,-1.5777],
+       ['DL54', 54.763242,-1.584879],
+       ['CB65', 54.7778,-1.575],
+       ['KS16', 54.778,-1.5824],
+       ['TW26', 54.7773,-1.5741],
+       ['UI38', 54.771872,-1.571986],
+       ['GP51', 54.7767,-1.5723],
+       ['UC78', 54.7691,-1.5694],
+       ['IH31', 54.7735,-1.5743],
+       ['UC64', 54.7724,-1.5755],
+       ['YU83', 54.764957,-1.576373],
+       ['XP36', 54.7698,-1.5674],
+       ['HL51', 54.7747,-1.5691],
+       ['DJ55', 54.775,-1.5762],
+       ['ZF45', 54.7759,-1.5731],
+       ['PJ54', 54.7675,-1.5747],
+       ['EG25', 54.7636,-1.5792],
+       ['HC43', 54.7682,-1.5722],
+       ['JI44', 54.762728,-1.576572],
+       ['ZZ15', 54.7761,-1.5806],
+       ['GM91', 54.7704,-1.5813],
+       ['KJ78', 54.7622,-1.5799],
+       ['MW95', 54.7708,-1.5776],
+       ['AD33', 54.7698,-1.5721],
+       ['RC33', 54.7742,-1.5762],
+       ['VM31', 54.7774,-1.5829],
+       ['IE17', 54.7688,-1.5711],
+       ['AK16', 54.775582,-1.572097],
+       ['IO29', 54.768,-1.5778],
+       ['AM26', 54.774,-1.5659],
+       ['RS57', 54.7738,-1.5713],
+       ['LY83', 54.7641,-1.5762],
+       ['ZS57', 54.759118,-1.579476],
+       ['LZ99', 54.7729,-1.5711],
+       ['KB32', 54.770865,-1.577950],
+       ['OO79', 54.776687,-1.579379],
+       ['RG46', 54.7779,-1.5642],
+       ['IB56', 54.7647,-1.5771],
+       ['CQ16', 54.7647,-1.5806],
+       ['NY26', 54.7744,-1.5692],
+       ['AT14', 54.7662,-1.5714],
+       ['WN37', 54.763,-1.5772],
+       ['YV79', 54.7777,-1.5762],
+       ['WM74', 54.769679,-1.580573],
+       ['QK69', 54.777,-1.5812],
+       ['AO27', 54.7644,-1.5798],
+       ['JU69', 54.7622,-1.5795],
+       ['UI82', 54.766,-1.5813],
+       ['VG65', 54.7771,-1.5653],
+       ['WT92', 54.7683,-1.5726],
+       ['JI68', 54.766462,-1.579170],
+       ['CG81', 54.761638,-1.579533],
+       ['QO72', 54.764380,-1.583171],
+       ['EK44', 54.7775,-1.5682],
+       ['OK89', 54.7594,-1.5808],
+       ['HM77', 54.7655,-1.5833],
+       ['LZ52', 54.7725,-1.5807],
+       ['VL46', 54.7749,-1.5762],
+       ['VG67', 54.7599,-1.5814],
+       ['AD43', 54.7626,-1.575],
+       ['HG51', 54.7674,-1.5807],
+       ['EB16', 54.7738,-1.5752],
+       ['XC22', 54.776,-1.5792],
+       ['RO65', 54.7674,-1.5704],
+       ['YS27', 54.778,-1.5751],
+       ['FJ91', 54.759118,-1.580474],
+       ['OS56', 54.768628,-1.570009],
+       ['BW19', 54.7639,-1.5807],
+       ['RS35', 54.768496,-1.574530],
+       ['UZ81', 54.774522,-1.575664],
+       ['QI43', 54.7759,-1.5724],
+       ['VC37', 54.775216,-1.583226],
+       ['ZI98', 54.7777,-1.5849],
+       ['IV92', 54.7784,-1.5756],
+       ['HX41', 54.7647,-1.5791],
+       ['NO59', 54.7775,-1.5838],
+       ['TW47', 54.7736,-1.5845],
+       ['IR53', 54.7638,-1.5743],
+       ['IR63', 54.7738,-1.5773],
+       ['OH99', 54.7763,-1.5786],
+       ['VQ12', 54.774316,-1.574572],
+       ['DH45', 54.7753,-1.5749],
+       ['XB59', 54.7748,-1.5748],
+       ['NT78', 54.7723,-1.5763],
+       ['UE48', 54.7674,-1.573],
+       ['PR42', 54.7657,-1.5761],
+       ['FD56', 54.762915,-1.576181],
+       ['QU47', 54.776,-1.5739],
+       ['PY21', 54.7684,-1.5762],
+       ['BD14', 54.7776,-1.5856],
+       ['JP68', 54.767128,-1.575383],
+       ['VS12', 54.7719,-1.5825],
+       ['RB88', 54.7753,-1.5764],
+       ['KB46', 54.7766,-1.5842],
+       ['PM51', 54.777,-1.5721],
+       ['UM87', 54.7791,-1.58167],
+       ['MQ35', 54.7772,-1.5793],
+       ['IR72', 54.7651,-1.5706],
+       ['RP99', 54.7789,-1.5661],
+       ['GE49', 54.7744,-1.5659],
+       ['YJ12', 54.7677,-1.5714],
+       ['FL43', 54.7718,-1.5757],
+       ['BD66', 54.7771,-1.5744],
+       ['NO63', 54.7784,-1.584],
+       ['QG57', 54.7655,-1.5689],
+       ['XN62', 54.7759,-1.5857],
+       ['SU93', 54.7753,-1.585],
+       ['VX92', 54.7776,-1.5792],
+       ['JR85', 54.7681,-1.5733],
+       ['YY45', 54.7758,-1.5818],
+       ['PL39', 54.7637,-1.5803],
+       ['OO31', 54.763688,-1.579942],
+       ['TS24', 54.7715,-1.5768],
+       ['FX51', 54.7724,-1.5704],
+       ['IY72', 54.7693,-1.5735],
+       ['NG57', 54.7749,-1.5751],
+       ['JN54', 54.7782,-1.5731],
+       ['MY74', 54.773497,-1.573554],
+       ['BJ96', 54.7785,-1.5692],
+       ['QF51', 54.7657,-1.5756],
+       ['MJ13', 54.7773,-1.5755],
+       ['BC36', 54.774548,-1.568202],
+       ['XR53', 54.7767,-1.5738],
+       ['OZ74', 54.7686,-1.5738],
+       ['LA41', 54.765,-1.5717],
+       ['VN73', 54.7596,-1.5798],
+       ['RK91', 54.765342,-1.580980],
+       ['RK62', 54.7754,-1.5881],
+       ['YC36', 54.7769,-1.576],
+       ['WE71', 54.774629,-1.571984],
+       ['PH92', 54.7636,-1.5843],
+       ['BL59', 54.7758,-1.5792],
+       ['GG71', 54.7766,-1.5691],
+       ['YS95', 54.7723,-1.582],
+       ['CK59', 54.7696,-1.5684],
+       ['DG14', 54.7772,-1.5707],
+       ['RC65', 54.768,-1.5727],
+       ['NG64', 54.774,-1.5767],
+       ['TA24', 54.774,-1.5749],
+       ['DJ27', 54.768908,-1.573511],
+       ['LS26', 54.7721,-1.5776],
+       ['FI97', 54.7751,-1.5704],
+       ['WE69', 54.769,-1.5794],
+       ['QU77', 54.7762,-1.5739],
+       ['CR59', 54.767473,-1.571643],
+       ['ZG93', 54.766348,-1.576179],
+       ['TU46', 54.7757,-1.5746],
+       ['FT12', 54.7794,-1.5756],
+       ['UG83', 54.7774,-1.5816],
+       ['PC48', 54.7761,-1.5848],
+       ['LZ95', 54.775951,-1.575913],
+       ['DV73', 54.7713,-1.5714],
+       ['TO65', 54.7635,-1.5772],
+       ['YU16', 54.7712,-1.577],
+       ['XL49', 54.7607,-1.5811],
+       ['UQ49', 54.764,-1.5857],
+       ['ZZ14', 54.776,-1.5774],
+       ['PO27', 54.7769,-1.577]
+      ]; 
+
+            var marker, i;
+            
+              // for egg in locations matrix, set up a marker
+            for (i=0; i<199; i++){
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                    map: map,
+                    icon: icon,
+                    title: locations[i][0]
+                });
+                markers.push(marker); // store marker in array called markers
+
+                google.maps.event.addListener(marker, 'click', (function(marker, i){ //if clicked on egg (marker)
+                    return function(){
+                                    
+                        document.getElementById('eggFound').style.display='block';  // show egg found panel
+                        document.getElementById('eggidcode').value = locations[i][0]; //egg id in 1st column of locations data
+                        document.getElementById('eggidcode').readOnly = true; // cannot alter egg id code
+                        document.getElementById('formNameInput').value = yourname;  // auto fill name and username
+                        document.getElementById('formEmailInput').value = youremail; 
+                        document.getElementById('mySubmit').disabled = false; 
+                        clickedMarker = marker; // store marker clicked on
+                        clickedMarker.setIcon('blank.png'); // hide egg from screen when submitted - marker will be removed on click
+                        // change background and text of egg found panel based on which egg is found
+                        if (specialEggs.includes(i+1)) {                                                      document.getElementById('eggFound').style.backgroundImage='url("SpecialMole.png")';
+                           document.getElementById('eggTitle').innerHTML = 'Special Mole Found!';
+                           document.getElementById('foundMessage').innerHTML = 'Congratulations, you have won a special prize!';
+                        }   else if (i === 192){                         
+                            document.getElementById('eggFound').style.backgroundImage='url("SpecialMole.png")';
+                           document.getElementById('eggTitle').innerHTML = 'Hardest Mole Found!';
+                           document.getElementById('foundMessage').innerHTML = 'Congratulations, you have won a special prize!';
+                        }   else{
+                            document.getElementById('eggFound').style.backgroundImage='url("MoleFound.png")'; 
+                            document.getElementById('eggTitle').innerHTML = 'Congratulations!'; 
+                            document.getElementById('foundMessage').innerHTML = 'Please submit your information to record this mole'; 
+                        }   
+                    }
+                })(marker,i))
+            }
+
+            $(document).ready(function(){
+                    //Egg Found Form
+                    var $form = $('#myForm');
+                    var $subm = $('#mySubmit');
+                    var $impt = $form.find(':input').not(':button, :submit, :reset, :hidden');
+                 // Submit function:
+                    $form.submit(function(){
+                     // Disable the submit button:
+                        $subm.prop('disabled', true);
+                        $('#eggFound').hide(); // hide panel once submit pressed
+                        $.post($(this).attr('action'), $(this).serialize(), function(response){
+                            //store form response - capture egg ID
+                            var formsubmitted2 = $("#myForm").serializeArray();
+                            var eggIDcaptured = formsubmitted2[0].value;
+                            
+                            // On success, clear all inputs;
+                            $impt.val('').attr('value','').removeAttr('checked').removeAttr('selected');
+                           
+                        },'json');
+                        return false;
+                    });
+
+                    // Form to enter name and username on Load
+                    var $formemail = $('#emaillogging');
+                    var $submemail = $('#emailloggingsubmit');
+                    var $imptemail = $formemail.find(':input').not(':button, :submit, :reset, :hidden');
+                 // Submit function:
+                    $formemail.submit(function(){
+                        //$.post($(this).attr('action'), $(this).serialize(), function(response){
+                      // Store response
+                            var formsubmitted = $("#emaillogging").serializeArray();
+                            yourname = formsubmitted[0].value;
+                            youremail = formsubmitted[1].value;
+                            emailentered = 1;
+                           // On success, clear all inputs;
+                            $imptemail.val('').attr('value','').removeAttr('checked').removeAttr('selected');
+                            // Disable the submit button:
+                            $submemail.prop('disabled', true);
+                            $('#intro').hide();
+                        //},'json');
+                        return false;
+                    });
+                    spreadsheetID = "11L0n4Zgg5Bo1dkerzgnVx4rD8SO2aIPRl1OrgYr5_vY";
+                    url = "https://spreadsheets.google.com/feeds/list/" + spreadsheetID + "/1/public/values?alt=json";
+                    // Get eggs remaining, username list and egg found list on page load
+                    console.log(url)
+                    $.getJSON(url,function(data){
+                        var entry = data.feed.entry;
+                        console.log(entry)
+                        $(entry).each(function(){
+                            eggList.push(this.gsx$eggid.$t);
+                            userList.push(this.gsx$email.$t);
+                            if( this.gsx$count.$t.length !== 0 ) {
+                                console.log(this.gsx$count.$t)
+                                var eggsRemain = locations.length - this.gsx$count.$t;
+                                console.log(eggsRemain)
+                                $('#eggCount').html(eggsRemain);
+                            }
+                            if (eggsRemain === 0) {
+                                $('#allEggsFound').css("display","block");
+                            }
+                            else {
+                                $('#allEggsFound').css("display","none");
+                            }
+                        });
+                    });
+
+        // Onclick Function
+        document.addEventListener("click", function(){
+            var youremailcount = 0; //reset count of your eggs
+            //get camera position
+            position = panorama.getPosition();
+            var heading = panorama.getPov().heading;
+            positionLat = position.lat();
+            positionLong = position.lng();
+            var newCenter = new google.maps.LatLng(positionLat,positionLong);
+            miniMap.panTo(newCenter);
+            
+            miniMapMarker.setPosition(new google.maps.LatLng(positionLat, positionLong));
+            miniMapIcon.rotation = heading;
+            miniMapMarker.setIcon(miniMapIcon);
+            
+
+            //Get data from egg spreadsheet and store in array
+          spreadsheetID = "11L0n4Zgg5Bo1dkerzgnVx4rD8SO2aIPRl1OrgYr5_vY";
+          url = "https://spreadsheets.google.com/feeds/list/" + spreadsheetID + "/1/public/values?alt=json";
+            console.log("3")
+            $.getJSON(url,function(data){
+                eggList = [];
+                userList = [];
+                hashList = [];
+                var entry = data.feed.entry;
+                $(entry).each(function(){
+                    eggList.push(this.gsx$eggid.$t); // add egg and usernames from google sheet to array
+                    userList.push(this.gsx$email.$t);
+                    //Check if all eggs are found
+                    if( this.gsx$count.$t.length !== 0 ) {
+                        var eggsRemain = locations.length - this.gsx$count.$t; // eggs remain = total eggs - number of found eggs
+                        $('#eggCount').html(eggsRemain);
+                    }
+                    // If all eggs are found, display completion message
+                    if (eggsRemain === 0) {
+                        $('#allEggsFound').css("display","block");
+                        $('#allEggsFound').css("background-image", "url('All%20Moles%20Found.png')")
+                    }
+                });
+            });
+
+           //loop through username list to count instances of your username/email
+           for (var i = 0; i<userList.length; i++){
+               if (userList[i] === youremail){
+                   youremailcount++
+               }
+           }
+            //Update your eggs count on screen
+           if ( emailentered ){
+              document.getElementById("yourEggs").innerHTML = youremailcount;
+           }
+           else {
+               document.getElementById("yourEggs").innerHTML = 0;
+           }
+
+    /* ---------------------------------------------------------------------------
+    ------------------------------------------------------------------------------
+                Hide Found & Distant Eggs 
+    -----------------------------------------------------------------------------*/           
+         var minDist = 0.000225; // distance of camera from egg for egg to appear
+
+         // Loop through array of all markers and get coords for each    
+         for (var m = 0; m<markers.length; m++){
+             var markerPosition = markers[m].getPosition();
+             var markerPositionLat = markerPosition.lat();
+             var markerPositionLong = markerPosition.lng();
+             // Calculate distance between camera position and marker
+             var markerDistance = Math.sqrt(Math.pow((positionLat-markerPositionLat),2)+Math.pow((positionLong-markerPositionLong),2));
+             // If distance < minimum distance, and list of found eggs does not include that egg, display egg, else hide egg
+             if (markerDistance < minDist && !eggList.includes(locations[m][0])){
+                 markers[m].setVisible(true);
+             } else {
+                 markers[m].setVisible(false);
+             }
+         }      
+            eggList = [];
+            userList = [];
+
+        }); // End of document on click
+
+        }); //End Document Ready Function
+
+        /* ---------------------------------------------------------------------------
+                Set Up Map & Eggs Remain count on page load
+    -----------------------------------------------------------------------------*/
+            // We get the map's default panorama and set up some defaults.
+            panorama = map.getStreetView();
+            panorama.setPosition(crossroads);
+            panorama.setPov(/** @type {google.maps.StreetViewPov} */({
+              heading: 170,
+              pitch: 0
+            }));
+            panorama.setVisible(true);
+
+            var youremailcount = 0;  
+
+      }; // End map init function
+    //-----------------------------------------------------------------------       
+    
+    var countDownDate = new Date("Oct 04, 2020 11:00:00").getTime();
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+      // Get today's date and time
+      var now = new Date().getTime();
+      // Find the distance between now and the count down date
+      var distance = countDownDate - now;
+      // Time calculations for days, hours, minutes and seconds
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      // Display the result in the element with id="demo"
+      document.getElementById("days").innerHTML = days;
+      document.getElementById("hours").innerHTML = hours;
+      document.getElementById("minutes").innerHTML = minutes;
+      document.getElementById("seconds").innerHTML = seconds;
+
+     /* // If the count down is finished, write some text
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("countdown").style.display = 'none';
+        panorama.setOptions({
+                enableCloseButton:false, //remove option of going to map view
+                fullscreenControl: false,
+                zoomControl: false,
+                linksControl: true,
+                panControl: true,
+                clickToGo: true
+            }); 
+      } else {
+          document.getElementById("countdown").style.display = 'block';
+          panorama.setOptions({
+                enableCloseButton:false, //remove option of going to map view
+                fullscreenControl: false,
+                zoomControl: false,
+                linksControl: false,
+                panControl: false,
+                clickToGo: false
+            });
+      }
+        */
+    }, 1000);    
+        
+    function closeWindow(){
+        document.getElementById('instructions').style.display='none';  
+    }
+        
+     function toggleStreetView() {
+        var toggle = panorama.getVisible();
+        if (toggle == false) {
+          panorama.setVisible(true);
+        } else {
+          panorama.setVisible(false);
+        }
+      }
+    
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXKQ43weuTR71INSO9t5TW7leL3BDy9Yo&callback=initMap">
+    </script>
+  </body>
+</html>
