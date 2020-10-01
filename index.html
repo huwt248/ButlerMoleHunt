@@ -686,19 +686,10 @@
                         document.getElementById('mySubmit').disabled = false; 
                         clickedMarker = marker; // store marker clicked on
                         clickedMarker.setIcon('blank.png'); // hide egg from screen when submitted - marker will be removed on click
-                        // change background and text of egg found panel based on which egg is found
-                        if (specialEggs.includes(i+1)) {                                                      document.getElementById('eggFound').style.backgroundImage='url("SpecialMole.png")';
-                           document.getElementById('eggTitle').innerHTML = 'Special Mole Found!';
-                           document.getElementById('foundMessage').innerHTML = 'Congratulations, you have won a special prize!';
-                        }   else if (i === 192){                         
-                            document.getElementById('eggFound').style.backgroundImage='url("SpecialMole.png")';
-                           document.getElementById('eggTitle').innerHTML = 'Hardest Mole Found!';
-                           document.getElementById('foundMessage').innerHTML = 'Congratulations, you have won a special prize!';
-                        }   else{
-                            document.getElementById('eggFound').style.backgroundImage='url("MoleFound.png")'; 
-                            document.getElementById('eggTitle').innerHTML = 'Congratulations!'; 
-                            document.getElementById('foundMessage').innerHTML = 'Please submit your information to record this mole'; 
-                        }   
+                        document.getElementById('eggFound').style.backgroundImage='url("MoleFound.png")'; 
+                        document.getElementById('eggTitle').innerHTML = 'Congratulations!'; 
+                        document.getElementById('foundMessage').innerHTML = 'Please submit your information to record this mole'; 
+                         
                     }
                 })(marker,i))
             }
